@@ -14,8 +14,8 @@ def shape():
     print('hi')
     print(request)
     file_storage = request.files['file']
-    print(file_storage.stream)
-    file_storage.save('./assets/lol.png')
+    print(file_storage.filename)
+    # file_storage.save('./assets/lol.png')
     return 'Yes'
 
 # Run
