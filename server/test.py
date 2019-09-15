@@ -2,6 +2,8 @@ import cv2
 import numpy as np
 from collections import Counter
 
+AREA_ERR = 1000
+
 def most_frequent(List):
     occurence_count = Counter(List)
     return occurence_count.most_common(1)[0][0]
