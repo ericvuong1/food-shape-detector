@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_restful import Resource, Api
 from flask_cors import CORS
+from shape_detector import detect_shape
 
 from collections import Counter
 
@@ -27,10 +28,10 @@ def shape():
     nparr = np.frombuffer(byte_array, np.uint8)
     img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     cv2.imwrite('newImage.png',img_np)
-
-    return 'hi'
+    shape = detect_shape()
+    return shape
 
 
 # Run
 if __name__ == '__main__':
-    app.run(use_reloader=True, host='0.0.0.0', port=5001)
+    app.run(use_reloader=True, host='0.0.0.0', port=5001, debug=True)
