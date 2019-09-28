@@ -34,4 +34,5 @@ def shape():
 
 # Run
 if __name__ == '__main__':
-    app.run(use_reloader=True, host='0.0.0.0', port=5001, debug=True)
+    app.run(use_reloader=True, host='0.0.0.0', port=5151, debug=True)
+    # app.run(use_reloader=True, debug=True)
