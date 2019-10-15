@@ -5,6 +5,9 @@ from collections import Counter
 AREA_ERR = 1000
 
 def most_frequent(List):
+    print('HI', List)
+    if not List:
+        return "Undetectable!"
     occurence_count = Counter(List)
     return occurence_count.most_common(1)[0][0]
 
@@ -32,6 +35,7 @@ def detect_shape():
     img_area = height * width
 
     shapes = []
+    print('contours', contours)
     for cnt in contours:
         area = cv2.contourArea(cnt)
 
