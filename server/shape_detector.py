@@ -1,41 +1,46 @@
 import cv2
 import numpy as np
+import imutils
 from collections import Counter
 
 AREA_ERR = 1000
 
 def most_frequent(List):
-    print('HI', List)
     if not List:
         return "Undetectable!"
     occurence_count = Counter(List)
     return occurence_count.most_common(1)[0][0]
 
 def detect_shape():
-    img = cv2.imread("newImage.png", cv2.IMREAD_GRAYSCALE)
+    img = cv2.imread("newImage.png")
     # img = cv2.imread("newImage.png")
 
-    t = 200
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray = cv2.GaussianBlur(gray, (5, 5), 0)
+    
+    # threshold the image, then perform a series of erosions +
+    # dilations to remove any small regions of noise
+    thresh = cv2.threshold(gray, 45, 255, cv2.THRESH_BINARY)[1]
+    thresh = cv2.erode(thresh, None, iterations=2)
+    thresh = cv2.dilate(thresh, None, iterations=2)
+    
+    # find contours in thresholded image, then grab the largest
+    # one
+    cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
+        cv2.CHAIN_APPROX_SIMPLE)
+    cnts = imutils.grab_contours(cnts)
+    # c = max(cnts, key=cv2.contourArea)
+    contours = cnts
 
-    # gray = cv2.cvtColor(src = img, code = cv2.COLOR_BGR2GRAY)
-    # blur = cv2.GaussianBlur(src = gray, 
-    #     ksize = (5, 5), 
-    #     sigmaX = 0)
-    # (t, binary) = cv2.threshold(src = blur,
-    #     thresh = t, 
-    #     maxval = 255, 
-    #     type = cv2.THRESH_BINARY)
-    # (_, contours, _) = cv2.findContours(image = binary, 
-    #     mode = cv2.RETR_EXTERNAL,
-    #     method = cv2.CHAIN_APPROX_SIMPLE)
-    _, threshold = cv2.threshold(img, 240, 255, cv2.THRESH_BINARY)
-    contours, _ = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    # t = 200
 
-    height, width = img.shape 
+    # _, threshold = cv2.threshold(img, 240, 255, cv2.THRESH_BINARY)
+    # _, contours, _ = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    height, width, channels = img.shape 
     img_area = height * width
 
     shapes = []
-    print('contours', contours)
     for cnt in contours:
         area = cv2.contourArea(cnt)
 
@@ -63,8 +68,13 @@ def detect_shape():
         else:
             shape = 'Circle'
         shapes.append(shape)
+
     # cv2.imshow('hi', img)
     # cv2.waitKey()
-    print(most_frequent(shapes))
+    print('Detected: ', most_frequent(shapes))
     return most_frequent(shapes)
+
+# detect_shape()
+
+
 
